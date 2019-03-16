@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-import Cliente.Cliente;
+
 
 public class Cliente {
 	
@@ -42,7 +42,11 @@ public class Cliente {
 		this.port=port;
 	}
 	
+	
+	
+	
 	/*
+	 * 
      * metodo que s eencarga de conectarse al servidor
      *  @Param: String nombre, representa el nombre del jugador
      *   @Param: Int ip,
