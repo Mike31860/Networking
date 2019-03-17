@@ -1,6 +1,8 @@
 package mundo;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,8 +16,15 @@ import java.util.Scanner;
 
 
 public class Cliente {
+	/*
+     * Constante que representa el puerto
+     */
+	public final static int PORT = 8888; 
 	
 	
+	/*
+     * Atributo que representa el puerto
+     */
 	private int port;
 	/*
      * Atributo que representa la direccion Ip
@@ -33,16 +42,20 @@ public class Cliente {
      *Atributo que representa el mecanismo de escritura por el cual se va a escribir el mensaje 
      */
 	private PrintWriter writer;
+	/*
+     *Atributo que representa el circulo perteneciente a cada cliente 
+     */
+	private Circulo circulo;
+	
 	
 	/*
      * metodo constructor de la clase cliente
      */
-	public Cliente(String host, int port) {
+	public Cliente(String host, int port, Circulo circulo) {
 		this.host=host;
 		this.port=port;
+		this.circulo = circulo;
 	}
-	
-	
 	
 	
 	/*
@@ -69,13 +82,11 @@ public class Cliente {
      */
 	public void connect() {
 		try {
+			System.out.println("Enviando Conexión...");
 			socket = new Socket(host,port);
 			System.out.println("Me conecté a servidor");
-			InputStream input = socket.getInputStream();
-			OutputStream output = socket.getOutputStream();
 			
-			reader = new BufferedReader(new InputStreamReader(input));
-			writer = new PrintWriter(new OutputStreamWriter(output),true);
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,43 +96,56 @@ public class Cliente {
 		}
 	}
 	
+	public void send(String mensaje) {
+		
+		try {
+			
+			OutputStream os = socket.getOutputStream();
+			OutputStreamWriter osw = new OutputStreamWriter(os);
+			BufferedWriter bufw = new BufferedWriter(osw);
+			PrintWriter out = new PrintWriter(bufw);
+			out.println(mensaje);
+			out.flush();
+			
+			InputStream is =socket.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			InputStreamReader isr = new InputStreamReader(bis);
+			BufferedReader bufReader = new BufferedReader(isr);
+			
+			System.out.print(bufReader.readLine());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		System.out.println("iniciando cliente");
-		Scanner sc = new Scanner(System.in);
-		Cliente cliente = new Cliente("127.0.0.1",8888);
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		Cliente cliente = new Cliente("localhost",PORT, new Circulo(20, 50,50,0,"DERACHA",0, false));
 		
 		cliente.connect();
 		
-		new Thread(new Runnable() {
+		try {
+			String linea = in.readLine();
 			
-			@Override
-			public void run() {
-				while(true) {
+			while(!linea.equals("") && linea != null) {
 				
-					
-					
-					
-				}
-				//h
+				cliente.send(linea);
+				linea = in.readLine();
 			}
-		}).start();
-		
+			
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 
