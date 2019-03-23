@@ -1,4 +1,4 @@
-package mundo;
+package model;
 
 import java.awt.Color;
 

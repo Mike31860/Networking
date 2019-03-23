@@ -1,4 +1,4 @@
-package mundo;
+package model;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

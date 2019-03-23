@@ -1,4 +1,4 @@
-package Interfaz;
+package main;
 
 public class Escenario {
 
